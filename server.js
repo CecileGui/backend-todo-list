@@ -7,6 +7,7 @@ const Schema = mongoose.Schema;
 const router = express.Router();
 
 app.use(bodyParser.json())
+
 app.listen(4000, () => {
     console.log("The server is up and running on port 4000")
 })
@@ -29,11 +30,53 @@ let Todo = mongoose.model('Todo', todoSchema)
 // Routes
 app.use('/todos', router)
 
+//Récupérer tous les documents de la DB
+//GET
+router.route('/').get((req, res) => {
+    Todo.find(function (err, items) {
+        if (err){
+            res.status(400).send('Les todos ne sont pas en base')
+        } else {
+            res.status(200).json(items)
+        }
+    })
+    
+    
+})
+
+
+// Pour ajouter à la DB
+//POST
+
 router.route('/add').post((req, res) => {
-    let todo = new Todo({text: "text", isCompleted: false})
+    let todo = new Todo({text: "text3", isCompleted: false})
 
     todo.save()
-    .then(() => console.log('todo successfully created'))
-    .catch(err => console.log(err))
-    console.log(res)
+    .then(() => {
+        res.status(200).send()
+    })
+    .catch(err => {
+        res.status(400).send(err)
+
+    })
+    
+    
+})
+
+// Mettre à jour un document
+// PUT
+router.route('/:id').put((req, res) => {
+    Todo.findById(req.params.id, (err, todo) => {
+        if(err) {
+            res.send(err)
+        }
+        todo.text = req.body.text
+        todo.isCompleted = req.body.isCompleted
+        todo.save((err) => {
+            if(err){
+                res.send(err)
+            }
+            res.send('todo successfully updated')
+        })
+    })
 })
