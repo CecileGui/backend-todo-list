@@ -47,7 +47,6 @@ router.route('/').get((req, res) => {
 
 // Pour ajouter à la DB
 //POST
-
 router.route('/add').post((req, res) => {
     let todo = new Todo({text: "text3", isCompleted: false})
 
@@ -63,9 +62,21 @@ router.route('/add').post((req, res) => {
     
 })
 
+// Pour supprimer de la DB
+// DELETE
+router.route('/:id').delete((req, res) => {
+    Todo.findByIdAndRemove(req.params.id, (err, todo) => {
+        if (err) {
+            res.status(400).send(err)
+        } else {
+            res.status(200).json('suppression effectuée avec succès')
+        }
+    })
+})
+
 // Mettre à jour un document
 // PUT
-router.route('/:id').put((req, res) => {
+/*router.route('/:id').put((req, res) => {
     Todo.findById(req.params.id, (err, todo) => {
         if(err) {
             res.send(err)
@@ -79,4 +90,4 @@ router.route('/:id').put((req, res) => {
             res.send('todo successfully updated')
         })
     })
-})
+})*/
