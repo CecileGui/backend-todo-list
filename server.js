@@ -1,12 +1,15 @@
+// imports
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors')
 
 const app = express();
 const Schema = mongoose.Schema;
 const router = express.Router();
 
 app.use(bodyParser.json())
+app.use(cors())
 
 app.listen(4000, () => {
     console.log("The server is up and running on port 4000")
@@ -22,7 +25,7 @@ mongoose.connect(db)
 // Schema
 let todoSchema = new Schema({
     text: String,
-    isCompleted: Boolean
+    done: Boolean
 })
 
 let Todo = mongoose.model('Todo', todoSchema)
@@ -48,7 +51,7 @@ router.route('/').get((req, res) => {
 // Pour ajouter à la DB
 //POST
 router.route('/add').post((req, res) => {
-    let todo = new Todo({text: "text3", isCompleted: false})
+    let todo = new Todo(req.body)
 
     todo.save()
     .then(() => {
@@ -76,7 +79,7 @@ router.route('/:id').delete((req, res) => {
 
 // Mettre à jour un document
 // PUT
-/*router.route('/:id').put((req, res) => {
+router.route('/:id').put((req, res) => {
     Todo.findById(req.params.id, (err, todo) => {
         if(err) {
             res.send(err)
@@ -90,4 +93,4 @@ router.route('/:id').delete((req, res) => {
             res.send('todo successfully updated')
         })
     })
-})*/
+})
