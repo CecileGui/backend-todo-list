@@ -122,12 +122,12 @@ router.route('/:id').put((req, res) => {
             res.send(err)
         }
         todo.text = req.body.text
-        todo.isCompleted = req.body.isCompleted
+        todo.done = req.body.done
         todo.save((err) => {
             if(err){
                 res.send(err)
             }
-            res.send('todo successfully updated')
+            res.status(200).json('todo successfully updated')
         })
     })
 })
